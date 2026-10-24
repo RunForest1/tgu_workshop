@@ -1,0 +1,6 @@
+﻿source;rows;unit;key
+contract_events.csv;3299;одно событие договора;event_id
+subscribers.csv;2600;один абонент;customer_id
+billing_monthly.csv;24248;абонент за расчётный месяц;customer_id + billing_month
+support_legacy_sep_oct_2025.csv;1615;одно обращение;ticket_no
+support.sqlite (support_current_raw, через SQL-запрос);9373;одно обращение;ticket_id

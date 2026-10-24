@@ -1,0 +1,5 @@
+﻿source;rows;unit;key
+contract_events_clean.csv;3299;одно событие договора;event_id
+subscribers_clean.csv;2600;один абонент;customer_id
+billing_clean.csv;24098;абонент за расчётный месяц;customer_id + billing_month
+support_clean.csv;10818;одно обращение;ticket_id

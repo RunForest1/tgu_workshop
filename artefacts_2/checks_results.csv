@@ -1,0 +1,10 @@
+﻿check;expectation;result;detail
+Повтор обращения;Счётчик не меняется (ticket_id уникален в support_clean);пройдена;дублирующихся ticket_id после очистки: 0
+Позднее поступление (синтетический пример);Запись не входит в августовский агрегат на снимке 2026-09-01;пройдена;created_at=2026-08-31 23:00:00+03:00, available_at=2026-09-01 09:00:00+03:00 > snapshot available_at=2026-09-01 00:00:00+03:00 => не включается
+Абонент без обращений сохраняется;Строки с support_count=0 присутствуют и не удалены;пройдена;"строк с support_count=0: 16046; абонентов вовсе без обращений: 260"
+Объединение биллинга — число строк;customer_month.rows == billing_clean.rows;пройдена;customer_month: 24098, billing_clean: 24098
+Объединение биллинга — суммы;Сумма charged_rub и paid_rub не изменилась после join;пройдена;"charged_rub: cm=17397696.86 bill=17397696.86; paid_rub: cm=16890647.56 bill=16890647.56"
+Уникальность ключа customer_month;(customer_id, billing_month) уникален;пройдена;дублей ключа: 0
+billing_available_at согласован с billing_month;available_at всегда равен первому числу месяца, следующего за billing_month;пройдена;диапазон billing_available_at: 2025-10-01 00:00:00+03:00 .. 2026-09-01 00:00:00+03:00
+Будущие termination не в признаках;contract_events_clean не используется как источник признаков customer_month (только как источник восстановления activation_date);пройдена;в customer_month нет полей, производных от termination
+Повторный запуск;Повторный запуск с теми же исходными данными даёт идентичный customer_month.csv;пройдена;идентичен: True

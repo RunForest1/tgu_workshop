@@ -1,0 +1,47 @@
+﻿source;field;data_type;description;unit;rules
+subscribers_clean.csv;customer_id;String;Идентификатор абонента;—;Ключ. Уникален.
+subscribers_clean.csv;activation_date;Date;Дата подключения;дата;YYYY-MM-DD. Пропуски (65 строк) восстановлены из contract_events_clean.event_type=activation.
+subscribers_clean.csv;region;String;Регион обслуживания;—;Одно из пяти значений, постоянно для абонента.
+subscribers_clean.csv;acquisition_channel;String;Канал подключения;—;online, store, partner.
+subscribers_clean.csv;customer_segment;String;Сегмент абонента;—;individual или small_business.
+contract_events_clean.csv;event_id;String;Идентификатор события;—;Ключ. Уникален.
+contract_events_clean.csv;customer_id;String;Идентификатор абонента;—;Связь с subscribers_clean. Ровно одно activation и не более одного termination на абонента.
+contract_events_clean.csv;event_date;Date;Дата события;дата;YYYY-MM-DD. Журнал полон строго до 2026-10-01 (не включая).
+contract_events_clean.csv;event_type;String;Тип события;—;activation или termination.
+billing_clean.csv;customer_id;String;Идентификатор абонента;—;Составной ключ с billing_month.
+billing_clean.csv;billing_month;Date;Месяц оказания услуг;месяц;YYYY-MM-DD (нормализовано из двух исходных форматов DD.MM.YYYY и YYYY-MM-DD).
+billing_clean.csv;available_at;DateTime;Доступность строки;дата и время МСК (+03:00);Первый день месяца, следующего за billing_month.
+billing_clean.csv;tariff;String;Тариф;—;Basic/Comfort/Premium — канонизировано (устранены варианты COMFORT, " basic ", Премиум).
+billing_clean.csv;monthly_fee_rub;Decimal;Полная цена тарифа;руб.;Без изменений.
+billing_clean.csv;charged_rub;Decimal;Начислено за месяц;руб.;Без изменений.
+billing_clean.csv;paid_rub;Decimal;Оплачено за месяц;руб.;Может превышать charged_rub (погашение долга).
+billing_clean.csv;opening_debt_rub;Decimal;Долг на начало периода;руб.;Без изменений.
+billing_clean.csv;closing_debt_rub;Decimal;Долг на конец периода;руб.;40 пропусков пересчитаны: opening_debt_rub + charged_rub - paid_rub.
+billing_clean.csv;traffic_gb;Decimal;Трафик;ГБ;Пропуски (240) сохранены как неизвестные, не заменены нулём.
+billing_clean.csv;voice_minutes;Integer nullable;Минуты связи;мин.;80 отрицательных значений заменены на пропуск (физически невозможны).
+billing_clean.csv;active_days;Integer;Дни действия договора в месяце;дни;Без изменений.
+billing_clean.csv;payment_delay_days;Integer;Задержка оплаты;дни;Без изменений.
+billing_clean.csv;tariff_changes_count;Integer;Смены тарифа за месяц;шт.;Без изменений.
+support_clean.csv;ticket_id;String;Идентификатор обращения;—;Ключ. Уникален после объединения legacy+current.
+support_clean.csv;customer_id;String;Идентификатор абонента;—;Связь с subscribers_clean. Записи без связи вынесены в карантин.
+support_clean.csv;created_at;DateTime;Создание обращения;дата и время МСК (+03:00);Приведено из DD.MM.YYYY (legacy) и ISO 8601 Z (current) к единому поясу +03:00.
+support_clean.csv;available_at;DateTime;Доступность записи о создании;дата и время МСК (+03:00);Используется для проверки available_at ≤ дата снимка.
+support_clean.csv;topic;String;Тема обращения;—;network/billing/tariff/services/unknown. Legacy-категории переведены по schema_support.csv; 120 пропусков current → unknown.
+support_clean.csv;channel;String;Канал обращения;—;phone/chat/office.
+support_clean.csv;resolved_at;DateTime nullable;Время закрытия;дата и время МСК (+03:00);35 записей с закрытием раньше создания — поле обнулено, обращение сохранено.
+support_clean.csv;resolution_available_at;DateTime nullable;Доступность закрытия и оценки;дата и время МСК (+03:00);Используется при resolution_available_at ≤ дата снимка.
+support_clean.csv;satisfaction_score;Integer nullable;Оценка обслуживания;балл 1–5;Пусто у незакрытых и у обращений с обнулённым закрытием.
+support_clean.csv;source_system;String;Источник записи;—;legacy или current — для прослеживаемости решений очистки.
+quarantine.csv;*;*;Все поля support_clean плюс quarantine_reason;—;40 обращений: 20 без связи с абонентом (пустой/несуществующий customer_id), 20 с available_at раньше created_at.
+customer_month.csv;customer_id;String;Идентификатор абонента;—;Составной ключ с billing_month. Строк столько же, сколько в billing_clean (24098) — join не размножает строки.
+customer_month.csv;billing_month;Date;Месяц биллинга;месяц;Из billing_clean, без изменений.
+customer_month.csv;source_billing_month;Date;Месяц биллинга (копия billing_month);месяц;Для прослеживаемости происхождения строки согласно заданию занятия 3.
+customer_month.csv;billing_available_at;DateTime;Доступность строки целиком;дата и время МСК (+03:00);= available_at биллинга; определяет момент, когда вся строка (включая агрегаты поддержки) становится известна.
+customer_month.csv;region;String;Регион абонента;—;Из subscribers_clean (постоянная характеристика).
+customer_month.csv;acquisition_channel;String;Канал подключения;—;Из subscribers_clean (постоянная характеристика).
+customer_month.csv;customer_segment;String;Сегмент абонента;—;Из subscribers_clean (постоянная характеристика).
+customer_month.csv;support_count;Integer;Число доступных обращений, созданных в billing_month;шт.;0, если доступных связанных обращений нет — не доказывает полное отсутствие обращений в реальности.
+customer_month.csv;support_network_count;Integer;Из них по теме "качество связи";шт.;Подмножество support_count, topic=network.
+customer_month.csv;support_billing_count;Integer;Из них по теме "оплата";шт.;Подмножество support_count, topic=billing.
+customer_month.csv;support_unknown_topic_count;Integer;Из них с неизвестной темой;шт.;Подмножество support_count, topic=unknown.
+customer_month.csv;[остальные поля];*;Поля биллинга (tariff, monthly_fee_rub, charged_rub, paid_rub, opening/closing_debt_rub, traffic_gb, voice_minutes, active_days, payment_delay_days, tariff_changes_count);—;Без изменений относительно billing_clean.
