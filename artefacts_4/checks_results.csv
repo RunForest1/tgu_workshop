@@ -1,0 +1,9 @@
+﻿check;expectation;result;detail
+"Ключи уникальны; строки по T совпадают с активной базой";"dup=0; независимый пересчёт активной базы на T=2026-03-01 совпадает с features.csv";пройдена;"dup=0; независимо=1969, в features.csv=1969"
+Будущие данные не меняют прошлые признаки;Добавление строки на 2026-09-01 (вне сетки T) не меняет features.csv;пройдена;идентичны: True
+Граница доступности (<=);"available_at == T включается; available_at == T+1с исключается";пройдена;правило get_cm_row/get_digital_row использует available_at <= T
+Короткая история не превращается в 3 нулевых месяца;Для части строк traffic_last3_n_known < 3 (не все месяцы заполняются нулями);пройдена;строк с traffic_last3_n_known < 3: 5283 из 21548
+Пропущенный месяц не подменяется при расчёте разности;traffic_delta_prev2 пуст там, где один из двух месяцев неизвестен (не заменяется соседним);пройдена;пропусков traffic_delta_prev2: 2829 из 21548
+Ноль попыток / неподключённые статусы не становятся нулём;"not_enabled/export_gap/report_not_yet_available -> сессии = NaN; attempts=0 -> failure_rate = NaN";пройдена;"строк со статусом != observed, где digital_sessions_prev_month не NaN: 0; строк в источнике с observed и attempts=0: 4777"
+"Fit только на train; transform validation/test";"Preprocessor обучен на train (см. apply_preprocessing.py); X_val/X_test получены только transform";пройдена;см. X_columns_and_shapes.txt — fit_transform вызван один раз на train_df[X_cols], transform — на val/test
+Повторный запуск;Повторный запуск features_build.py даёт идентичный features.csv;пройдена;идентичен: True

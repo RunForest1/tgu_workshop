@@ -1,0 +1,29 @@
+Числовые столбцы:
+  tenure_days
+  debt_prev_month
+  payment_delay_days_prev_month
+  payment_ratio_prev_month
+  avg_debt_last3
+  months_with_debt_last3
+  traffic_prev_month
+  traffic_avg_last3
+  traffic_delta_prev2
+  traffic_per_active_day_prev_month
+  support_count_prev_month
+  support_count_last3
+  digital_sessions_prev_month
+  digital_payment_failure_rate_prev_month
+  digital_selfservice_actions_prev_month
+
+Категориальные столбцы:
+  region
+  customer_segment
+  acquisition_channel
+  tariff_prev_month
+  digital_status_prev_month
+
+X_train shape: (17678, 40)
+X_validation shape: (1941, 40)
+X_test shape: (1929, 40)
+Число столбцов после OneHot/масштабирования: 40
+Порядок строк в X совпадает с порядком строк train_df/val_df/test_df (соответствующие ключи customer_id, snapshot_at сохранены в том же порядке в split.csv после фильтрации по split и сброса индекса).
