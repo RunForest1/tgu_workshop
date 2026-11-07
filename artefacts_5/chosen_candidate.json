@@ -1,0 +1,8 @@
+{
+  "chosen_experiment_id": "lr_c01",
+  "selection_rule": "max validation macro Recall@K; tie -> max validation macro AP; tie -> first in config.json order",
+  "validation_macro_recall_at_K": 0.3709677419354839,
+  "validation_macro_average_precision": 0.097280390762773,
+  "baseline_validation_macro_recall_at_K": 0.4032258064516129,
+  "additional_churners_found_vs_baseline_validation_pooled": -2
+}

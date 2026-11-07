@@ -1,0 +1,38 @@
+{
+  "seed": 42,
+  "campaign_fraction": 0.1,
+  "baseline_feature": "debt_prev_month",
+  "numeric_columns": [
+    "tenure_days",
+    "debt_prev_month",
+    "payment_delay_days_prev_month",
+    "payment_ratio_prev_month",
+    "avg_debt_last3",
+    "months_with_debt_last3",
+    "traffic_prev_month",
+    "traffic_avg_last3",
+    "traffic_delta_prev2",
+    "traffic_per_active_day_prev_month",
+    "support_count_prev_month",
+    "support_count_last3",
+    "digital_sessions_prev_month",
+    "digital_payment_failure_rate_prev_month",
+    "digital_selfservice_actions_prev_month"
+  ],
+  "categorical_columns": [
+    "region",
+    "customer_segment",
+    "acquisition_channel",
+    "tariff_prev_month",
+    "digital_status_prev_month"
+  ],
+  "experiments": [
+    {"id": "lr_c01", "family": "logistic_regression", "params": {"C": 0.1}},
+    {"id": "lr_c1", "family": "logistic_regression", "params": {"C": 1.0}},
+    {"id": "lr_c1_balanced", "family": "logistic_regression", "params": {"C": 1.0, "class_weight": "balanced"}},
+    {"id": "hgb_leaf7", "family": "hist_gradient_boosting", "params": {"max_leaf_nodes": 7, "max_iter": 100, "learning_rate": 0.07}},
+    {"id": "hgb_leaf15", "family": "hist_gradient_boosting", "params": {"max_leaf_nodes": 15, "max_iter": 100, "learning_rate": 0.07}},
+    {"id": "hgb_leaf15_lr03", "family": "hist_gradient_boosting", "params": {"max_leaf_nodes": 15, "max_iter": 200, "learning_rate": 0.03}}
+  ],
+  "deviation_note": "Train ограничен T=2025-10-01..2026-05-01 (8 дат вместо 9 на этапе 4): training_utils.load_train_validation требует, чтобы конец горизонта (target_end_exclusive) последней train-даты не заходил за начало validation (2026-07-01). При T=2026-06-01 target_end_exclusive=2026-07-02 > 2026-07-01 — нарушение. T=2026-06-01 исключён только из подготовленных для этого этапа копий (model_prepared/), исходные features.csv/labels.csv/split.csv этапа 4 не менялись."
+}
